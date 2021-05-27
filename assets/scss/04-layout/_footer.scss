@@ -1,0 +1,18 @@
+/***********************************************
+* Footer
+***********************************************/
+.site-footer {
+	margin: 12px 0 4px;
+	color: #565656;
+
+	a {
+		color: #565656;
+		text-decoration: none;
+		opacity: 0.7;
+
+		&:hover,
+		&:focus {
+			opacity: 1;
+		}
+	}
+}

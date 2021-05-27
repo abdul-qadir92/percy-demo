@@ -1,0 +1,68 @@
+/***********************************************
+*.cards
+***********************************************/
+.card-border {
+	border: 1px solid #ccc;
+	.card-body {
+		padding: 20px;
+	}
+}
+
+.card {
+	margin-bottom: .75rem;
+}
+
+a.card {
+	display: block;
+	color: #333;
+	text-decoration: none;
+}
+
+.card.no-shadow .card-body{
+	@include box-shadow(none);
+}
+
+.card-block {
+	padding: 26px;
+}
+
+.card-heading {
+	border-radius: 0;
+}
+
+.card-controls {
+	float: right;
+}
+
+.card-title {
+	font-size: 16px;
+	margin-bottom: 0;
+}
+
+.card-body:before {
+	display: table;
+	content: " ";
+}
+.card-body:after {
+	display: table;
+	content: " ";
+	clear: both;
+}
+
+/***********************************************
+*.cards > Right to left
+***********************************************/
+.right-to-left {
+	.page-search-wrapper {
+		float: left;
+	}
+
+	.page-title-wrapper {
+		float: right;
+	}
+
+	.card-controls {
+		float: left;
+	}
+
+}

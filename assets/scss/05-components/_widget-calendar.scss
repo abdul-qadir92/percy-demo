@@ -1,0 +1,57 @@
+/***********************************************
+* Widgets > Calendar
+***********************************************/
+.widget-calendar {
+	.panel-body {
+		min-height: 340px;
+	}
+}
+div.zabuto_calendar .table tr.calendar-month-header th {
+	background: transparent;
+
+	span {
+		font-size: 16px;
+	}
+
+	i.ion,
+	i.fa {
+		font-size: 24px;
+	}
+}
+
+div.zabuto_calendar .table tr.calendar-dow-header th {
+	background: transparent;
+	text-transform: uppercase;
+	color: $color-success;
+}
+
+div.zabuto_calendar .badge {
+	display: inline-block;
+	padding: .25em .4em;
+	font-size: 75%;
+	font-weight: 700;
+	line-height: 1;
+	color: #fff;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	border-radius: .25rem;
+	padding-right: .6em;
+	padding-left: .6em;
+	border-radius: 10rem;
+	background-color: #357ebd;
+	color: #fff;
+	text-shadow: none;
+}
+
+.widget-calendar {
+	.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+		border: none;
+	}
+}
+
+.right-to-left {
+	.zabuto_calendar {
+		direction: ltr;
+	}
+}

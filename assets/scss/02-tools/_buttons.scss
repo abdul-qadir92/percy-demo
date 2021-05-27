@@ -1,0 +1,44 @@
+// Buttons
+@mixin button($default) {
+	background-color: $default;
+	border-color: $default;
+	color: #fff;
+
+	&:hover,
+	&:focus,
+	&.focus,
+	&:active,
+	&.active,
+	.open > &.dropdown-toggle {
+		background-color: lighten($default, 5%) !important;
+		border-color: lighten($default, 5%) !important;
+		color: #fff;
+	}
+
+	&:active:hover,
+	&.active:hover,
+	&:active:focus,
+	&:active:focus,
+	&:active.focus,
+	&.active.focus,
+	.open > &.dropdown-toggle:focus,
+	.open > &.dropdown-toggle:hover {
+		background-color: darken($default, 5%);
+		border-color: darken($default, 5%);
+		color: #fff;
+	}
+
+	&.disabled,
+	&[disabled],
+	fieldset[disabled] & {
+		&:hover,
+		&:focus,
+		&.focus,
+		&:active,
+		&.active {
+			background-color: $default;
+			border-color: $default;
+			color: #fff;
+		}
+	}
+}

@@ -1,0 +1,42 @@
+{
+  "name": "spark-bootstrap-theme",
+  "version": "2.1.1",
+  "description": "",
+  "dependencies": {
+    "bootstrap": "4.1.1",
+    "bxslider": "4.2.11",
+    "flot": "0.8.0-alpha",
+    "font-awesome": "4.7.0",
+    "fullcalendar": "3.4.0",
+    "gmaps": "0.4.24",
+    "ionicons": "2.0.1",
+    "jquery": "3.2.1",
+    "jvectormap": "2.0.4",
+    "moment": "^2.22.2",
+    "popper.js": "^1.14.4",
+    "raphael": "2.2.7",
+    "slippry": "1.4.0",
+    "summernote": "^0.8.10",
+    "twitter-bootstrap-wizard": "1.2.0"
+  },
+  "devDependencies": {
+    "@percy/puppeteer": "^1.1.0",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.6.0",
+    "babel-preset-env": "^1.7.0",
+    "concurrently": "3.5.1",
+    "http-server": "0.11.1",
+    "node-sass": "^4.9.3",
+    "nodemon": "^1.18.7",
+    "puppeteer": "^2.0.0"
+  },
+  "scripts": {
+    "build": "node-sass --include-path --source-map assets/css assets/scss/spark.scss assets/css/spark.css",
+    "deploy": "node-sass --output-style compressed --include-path scss assets/scss/spark.scss assets/css/spark.css",
+    "server": "http-server ./ --silent",
+    "start": "concurrently \"npm run server\" \"npm run watch\"",
+    "watch": "nodemon -e scss -x \"npm run build\"",
+    "test": "npx percy exec -t 200 -- node tests/demo.js"
+  },
+  "private": true
+}

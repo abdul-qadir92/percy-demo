@@ -1,0 +1,21 @@
+/***********************************************
+* Progress bars
+***********************************************/
+.progress {
+	height: 14px;
+}
+.progress-primary {
+	background-color: $color-primary;
+}
+.progress-success {
+	background-color: $color-success;
+}
+.progress-info {
+	background-color: $color-info;
+}
+.progress-warning {
+	background-color: $color-warning;
+}
+.progress-danger {
+	background-color: $color-danger;
+}

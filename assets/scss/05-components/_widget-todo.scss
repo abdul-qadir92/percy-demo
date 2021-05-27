@@ -1,0 +1,27 @@
+/***********************************************
+* Widgets > Todo
+***********************************************/
+.widget-todo {
+	.panel-body {
+		min-height: 340px;
+	}
+
+	.todo-item {
+
+		cursor: pointer;
+
+		span {
+			font-size: 14px;
+		}
+
+		.checkbox {
+			font-size: 18px;
+			color: $color-success;
+			margin-right: 6px;
+		}
+
+		&.done {
+			text-decoration: line-through;
+		}
+	}
+}

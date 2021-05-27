@@ -1,0 +1,10 @@
+/dist
+/tmp
+
+# dependencies
+/node_modules
+
+# misc
+/.sass-cache
+npm-debug.log*
+.DS_Store

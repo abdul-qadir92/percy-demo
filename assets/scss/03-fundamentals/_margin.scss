@@ -1,0 +1,22 @@
+/***********************************************
+* Margin
+***********************************************/
+@for $i from 1 through 5 {
+	.margin-#{$i}0{
+		margin: #{$i}0px;
+	}
+
+	// Top and Bottom
+	.margin-tb-#{$i}0{
+		margin: #{$i}0px 0;
+	}
+
+	// Left and Right
+	.margin-lr-#{$i}0{
+		margin: #{$i}0px 0;
+	}
+}
+
+.no-margin {
+	margin: 0;
+}

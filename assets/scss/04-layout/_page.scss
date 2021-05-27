@@ -1,0 +1,123 @@
+/***********************************************
+* Page
+***********************************************/
+.page-content {
+	margin-top: 20px;
+
+	.row > div {
+		position: relative;
+	}
+}
+
+@media (min-width: $screen-md-min) {
+	.page-content {
+		margin-top: -56px;
+	}
+
+	.page-body > div {
+		position: relative;
+	}
+
+	.page-sidebar,
+	.page-content {
+		float: left;
+		position: absolute;
+		min-height: 1px;
+		padding-right: 6px;
+	    padding-left: 6px;
+	}
+
+	.page-sidebar {
+		width: 20%;
+	}
+
+	.page-content {
+		width: 80%;
+		left: 20%;
+		padding-bottom: 30px;
+	}
+
+	.page-content.full-width {
+		width: 100%;
+		left: 0;
+	}
+
+	.collapsed {
+		.page-content {
+			width: calc(100% - 40px);
+			left: 40px;
+		}
+	}
+}
+
+@media (min-width: 1400px) {
+	.page-sidebar {
+		width: 15%;
+	}
+
+	.page-content {
+		width: 85%;
+		left: 15%;
+	}
+
+	.page-content.full-width {
+		width: 100%;
+		left: 0;
+	}
+}
+
+@media (max-width: $screen-sm-max) {
+	.page-sidebar {
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 250px;
+		height: 100%;
+		background: #fff;
+		z-index: 99;
+		@include box-shadow(0px 0px 20px 0px rgba(100, 100, 100, 0.55));
+		@include transition(all .2s ease);
+	}
+
+	.page-sidebar.toggled {
+		margin-left: -250px;
+	}
+}
+
+/***********************************************
+* Page > Full Width (login, register, 404)
+***********************************************/
+.page-content.full-width {
+	padding: 60px 0;
+	margin: 0 auto;
+}
+
+.page-brand {
+	font-size: 90px;
+	color: $color-success;
+	text-align: center;
+}
+
+/***********************************************
+* Page > Right to left
+***********************************************/
+body.right-to-left {
+	direction: rtl;
+
+	@media (min-width: $screen-md-min) {
+
+		.page-sidebar,
+		.page-content {
+			position: absolute;
+		}
+
+		.page-sidebar {
+			right: 0;
+		}
+
+		.page-content {
+			left: 0;
+		}
+
+	}
+}

@@ -1,0 +1,65 @@
+@charset "UTF-8";
+
+// Inspired by ITCSS (http://itcss.io)
+
+// 1. Settings
+// This layer contains settings & variables
+@import "01-settings/colors";
+
+// 2. Tools
+// This layer contains mixins & tools
+@import "02-tools/buttons";
+@import "02-tools/headings";
+@import "02-tools/opacity";
+@import "02-tools/responsive";
+@import "02-tools/shadows";
+@import "02-tools/transforms";
+@import "02-tools/transitions";
+
+// 3. Fundamentals
+// Bootstrap overrules & classes that can be used global (tables, forms etc)
+@import "03-fundamentals/backgrounds";
+@import "03-fundamentals/badges";
+@import "03-fundamentals/buttons";
+@import "03-fundamentals/cards";
+@import "03-fundamentals/charts";
+@import "03-fundamentals/colors";
+@import "03-fundamentals/forms";
+@import "03-fundamentals/global";
+@import "03-fundamentals/grid";
+@import "03-fundamentals/images";
+@import "03-fundamentals/margin";
+@import "03-fundamentals/nav";
+@import "03-fundamentals/padding";
+@import "03-fundamentals/progressbars";
+@import "03-fundamentals/tables";
+@import "03-fundamentals/typography";
+
+// 4. Layout
+// Layout styles that are used on every page (header, footer etc)
+@import "04-layout/footer";
+@import "04-layout/header";
+@import "04-layout/splash";
+@import "04-layout/navbar";
+@import "04-layout/page";
+@import "04-layout/sidebar";
+
+// 5. Components
+// This layer contains specific component styles
+@import "05-components/calendar";
+@import "05-components/datatables";
+@import "05-components/error";
+@import "05-components/gmaps";
+@import "05-components/jvectormap";
+@import "05-components/summernote";
+@import "05-components/widgets";
+@import "05-components/widget-calendar";
+@import "05-components/widget-messages";
+@import "05-components/widget-resellers";
+@import "05-components/widget-todo";
+@import "05-components/widget-worldmap";
+
+// 6. Trumps
+// This layer has the power to override anything at all that has gone before it.
+@import "06-trumps/landing";
+@import "06-trumps/rtl";

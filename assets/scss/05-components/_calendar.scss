@@ -1,0 +1,18 @@
+.fc-button,
+.fc-state-default,
+.fc-state-hover,
+.fc-state-active {
+  @include button(darken($color-success, 5%));
+  background-image: none;
+  box-shadow: none;
+}
+
+.fc-event, .fc-event-dot {
+  background: darken($color-success, 10%);
+  border: 2px solid darken($color-success, 10%);
+}
+
+.fc-time,
+.fc-title {
+  color: #fff;
+}

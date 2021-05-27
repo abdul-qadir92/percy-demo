@@ -1,0 +1,28 @@
+/* change table row colors and also calendar date colors */
+/* .table td {
+  color: red;
+} */
+
+/* a custom class applied to half of the header */
+/* .special-header-color {
+  background-color: purple !important;
+} */
+
+/* a custom class applied to some labels */
+/* .special-color {
+  color: orange !important;
+} */
+
+/* i.ion {
+  color: purple !important;
+} */
+
+/* only change the color of top nav menu icons */
+/* .navbar i.ion {
+  color: purple !important;
+} */
+
+/* ideally some css that will show changes in one browser but not the other */
+
+
+/* have a css change that alters the size of the map and show how other things resize around it */

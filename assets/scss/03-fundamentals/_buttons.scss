@@ -1,0 +1,95 @@
+/***********************************************
+* Buttons
+***********************************************/
+.btn {
+	font-size: 13px;
+	padding: 6px 18px;
+	@include transition(all .1s ease);
+
+	&:focus,
+	&:active:focus,
+	&.active:focus,
+	&.focus,
+	&:active.focus,
+	&.active.focus {
+		outline: 0;
+		outline-offset: 0;
+	}
+
+	&:active,
+	&.focus {
+		-webkit-box-shadow: none;
+		box-shadow: none;
+	}
+} 
+
+.btn-round {
+	border-radius: 16px !important;
+}
+
+.btn-group-lg>.btn,
+.btn-lg {
+	padding: 8px 22px;
+	font-size: 18px;
+}
+
+.pager > li a.btn-default,
+.btn-default {
+	color: #fff;
+	@include button($color-default);
+}
+
+.pager > li a.btn-primary,
+.btn-primary {
+	@include button($color-primary);
+}
+
+.pager > li a.btn-success,
+.btn-success {
+	@include button($color-success);
+}
+
+.pager > li a.btn-info,
+.btn-info {
+	@include button($color-info);
+}
+
+.pager > li a.btn-warning,
+.btn-warning {
+	@include button($color-warning);
+}
+
+.pager > li a.btn-danger,
+.btn-danger {
+	@include button($color-danger);
+}
+
+.pager > li a.btn-twitter,
+.btn-twitter {
+	@include button($color-twitter);
+}
+
+.pager > li a.btn-facebook,
+.btn-facebook {
+	@include button($color-facebook);
+}
+
+.pager > li a.btn-googleplus,
+.btn-googleplus {
+	@include button($color-googleplus);
+}
+
+.pager > li a.btn-pinterest,
+.btn-pinterest {
+	@include button($color-pinterest);
+}
+
+.pager > li a.btn-linkedin,
+.btn-linkedin {
+	@include button($color-linkedin);
+}
+
+.pager > li a.btn-github,
+.btn-github {
+	@include button($color-github);
+}

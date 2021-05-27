@@ -1,0 +1,146 @@
+/***********************************************
+* Sidebar
+***********************************************/
+.page-sidebar {
+	font-size: 13px;
+
+	.nav-pills {
+		margin: 4px 0;
+	}
+
+	.nav-pills>li>a {
+		background: none;
+		color: #565656;
+		padding: 10px;
+		display: block;
+		text-decoration: none;
+		outline: 0;
+	}
+
+	.nav-pills>li.active>a,
+	.nav-pills>li.active>a:focus,
+	.nav-pills>li.active>a:hover,
+	.nav-pills>li>a:focus,
+	.nav-pills>li>a:hover {
+		color: #000;
+	}
+
+	i.fa,
+	i.ion {
+		font-size: 24px;
+		vertical-align: -2px;
+		text-align: center;
+		width: 24px;
+	}
+
+	.nav-text {
+		display: inline-block;
+		margin-left: 10px;
+	}
+}
+
+@media (min-width: $screen-md-min) {
+	.page-sidebar {
+		margin-top: -46px;
+
+		> .nav-pills {
+			margin: 30px 0;
+		}
+
+		.nav-pills>li>a {
+			padding: 10px 0;
+		}
+		.nav-pills>li>ul>li {
+			margin-left: 38px;
+		}
+	}
+}
+
+.collapsed .page-sidebar .nav-text {
+	display: none;
+}
+
+.sidebar-collapse {
+	color: #fff;
+	font-size: 30px;
+	height: 40px;
+    padding: 10px 0;
+
+	.fa,
+	.ion {
+		cursor: pointer;
+	}
+}
+
+.collapsed .sidebar-collapse .show-on-collapsed,
+.sidebar-collapse .hide-on-collapsed {
+	display: inline-block;
+}
+
+.collapsed .sidebar-collapse .hide-on-collapsed,
+.sidebar-collapse .show-on-collapsed {
+	display: none;
+}
+
+.sidebar-collapse .hide-on-collapsed {
+	float: right;
+}
+
+.sidebar-collapse .show-on-collapsed {
+	float: left;
+}
+
+.right-to-left {
+	.collapsed .sidebar-collapse .show-on-collapsed,
+	.sidebar-collapse .hide-on-collapsed {
+		display: none;
+	}
+
+	.collapsed .sidebar-collapse .hide-on-collapsed,
+	.sidebar-collapse .show-on-collapsed {
+		display: inline-block;
+	}
+}
+
+.page-body.collapsed .page-sidebar {
+	.nav-pills.collapse.show {
+		display: none !important;
+	}
+
+	.dropdown-toggle:after {
+		display: none;
+	}
+}
+
+/***********************************************
+* Sidebar > Toggle
+***********************************************/
+.sidebar-open {
+	position: relative;
+	padding: 9px 10px;
+	margin: 10px;
+	background-color: transparent;
+	background-image: none;
+	border: 0;
+	border-radius: 0;
+	color: #fff;
+}
+.sidebar-open:focus {
+	outline: 0;
+}
+.sidebar-open .icon-bar {
+	display: block;
+	width: 22px;
+	height: 2px;
+	border-radius: 1px;
+	background: #fff;
+}
+.sidebar-open .icon-bar + .icon-bar {
+	margin-top: 4px;
+}
+.page-sidebar .sidebar-close {
+	i.fa,
+	i.ion {
+		font-size: 28px;
+	}
+}

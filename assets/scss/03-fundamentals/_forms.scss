@@ -1,0 +1,33 @@
+/***********************************************
+* Forms
+***********************************************/
+input.form-control {
+	box-shadow: none;
+	border-radius: 2px;
+
+	&-lg {
+		font-size: 16px;
+		font-weight: 300;
+	}
+}
+
+.form-control::-moz-placeholder {
+	color: #C1C1C1;
+	opacity: 1;
+}
+.form-control:-ms-input-placeholder {
+	color: #C1C1C1;
+}
+.form-control::-webkit-input-placeholder {
+	color: #C1C1C1;
+}
+
+.checkbox, .radio {
+    position: relative;
+		margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+#example-color-input {
+	min-height: 40px;
+}

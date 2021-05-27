@@ -1,0 +1,47 @@
+/***********************************************
+* Grid overrules
+***********************************************/
+.container-fluid,
+.container {
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+@media (min-width: $screen-sm-min){
+	.container-fluid {
+		width: 95%;
+	}
+}
+
+@media (min-width: $screen-lg-min){
+	.container-fluid {
+		width: 95%;
+	}
+
+	.container,
+	.container-fluid {
+		max-width: 1480px;
+	}
+
+	.boxed .container-fluid {
+		max-width: 1400px !important;
+	}
+}
+
+$colSelectors: ();
+@for $i from 1 through 12 {
+	$colSelectors: append($colSelectors, unquote('.col-xs-#{$i}'), comma);
+	$colSelectors: append($colSelectors, unquote('.col-sm-#{$i}'), comma);
+	$colSelectors: append($colSelectors, unquote('.col-md-#{$i}'), comma);
+	$colSelectors: append($colSelectors, unquote('.col-lg-#{$i}'), comma);
+}
+
+#{$colSelectors} {
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+.row {
+	margin-right: -10px;
+	margin-left: -10px;
+}

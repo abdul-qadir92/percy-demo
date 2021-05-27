@@ -1,0 +1,50 @@
+/***********************************************
+* Typography
+***********************************************/
+.text-white {
+	color: #fff;
+
+	.text-muted {
+		color: #DBDBDB;
+	}
+}
+
+.text-sm {
+	font-size: 12px !important;
+}
+
+.text-md {
+	font-size: 14px !important;
+}
+
+.text-lg {
+	font-size: 15px !important;
+}
+
+.text-xl {
+	font-size: 20px !important;
+}
+
+@include headings {
+	/*font-weight: 300;*/
+}
+
+.weight-book {
+	font-weight: 300;
+}
+
+.weight-regular {
+	font-weight: 400;
+}
+
+.weight-medium {
+	font-weight: 500;
+}
+
+.weight-demobold {
+	font-weight: 600;
+}
+
+.weight-bold {
+	font-weight: 700;
+}

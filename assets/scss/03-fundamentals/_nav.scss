@@ -1,0 +1,29 @@
+/***********************************************
+* Nav
+***********************************************/
+.nav-justified {
+  width: 100%;
+
+  .nav-item {
+    float: none;
+  }
+  .nav-link {
+    width: 100%;
+    margin-bottom: 5px;
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .nav-item {
+      display: table-cell;
+      width: 1%;
+    }
+    .nav-link {
+      margin-bottom: -1px;
+    }
+  }
+}
+
+.nav-stacked .nav-item {
+  min-width: 100%;
+}

@@ -1,0 +1,8 @@
+/* css for Percy visual tests */
+@media only percy {
+  .widget.animated {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+  }
+}

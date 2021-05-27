@@ -1,0 +1,29 @@
+.chart-legend {
+	.item {
+		margin: 0 6px 0 0;
+		display: inline-block;
+		font-size: 12px;
+	}
+
+	.color {
+		width: 14px;
+		height: 14px;
+		border: 1px solid #000;
+		display: inline-block;
+	}
+}
+
+.flotTip {
+    border: 0;
+    border-radius: 2px;
+    background: #292929;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 400;
+    padding: 5px;
+		z-index: 1;
+}
+
+#chart-pie {
+	margin-bottom: 40px;
+}

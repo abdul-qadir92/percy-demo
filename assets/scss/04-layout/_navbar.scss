@@ -1,0 +1,417 @@
+/***********************************************
+* Navigation
+***********************************************/
+.navbar-spark {
+	background-color: $color-default;
+	border-color: #15272e;
+	border-radius: 0;
+	border: 0;
+	margin-bottom: 0;
+	padding: 0;
+
+	.navbar-nav .nav-link {
+		outline: 0;
+	}
+
+	@media (max-width: $screen-xs-max){
+		.container-fluid {
+			width: 100%;
+			margin-left: 0;
+			margin-right: 0;
+		}
+	}
+
+	@media (max-width: $screen-sm-max){
+		.container-fluid {
+			padding-left: 0;
+			padding-right: 0;
+		}
+		.navbar-nav .nav-link {
+			padding: 15px;
+		}
+	}
+
+	@media (min-width: $screen-md-min){
+		#navbar {
+			padding-left: 0;
+			padding-right: 0;
+		}
+	}
+
+	.navbar-nav .nav-item+.nav-item {
+		margin-left: 0;
+	}
+
+	.navbar-brand {
+		color: $color-success;
+	}
+	.navbar-brand:hover,
+	.navbar-brand:focus {
+		color: $color-success;
+		background-color: transparent;
+	}
+	@media (min-width: $screen-md-min){
+		.navbar-brand {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			font-size: 54px;
+			outline: 0;
+		}
+	}
+	.navbar-text {
+		color: #ffffff;
+	}
+	.navbar-nav > li > a {
+		color: #c0c0c0;
+	}
+	@media (min-width: $screen-md-min){
+		.navbar-nav > li > a {
+			color: #c0c0c0;
+			border-top: 6px solid transparent;
+			padding-top: 35px;
+			padding-bottom: 40px;
+			padding-left: 20px;
+			padding-right: 20px;
+		}
+
+		.navbar-nav > li:last-child > a {
+			padding-right: 0;
+		}
+	}
+	.navbar-nav > li > a:hover,
+	.navbar-nav > li > a:focus {
+		color: #ffffff;
+		background-color: transparent;
+	}
+	.navbar-nav > .active > a,
+	.navbar-nav > .active > a:hover,
+	.navbar-nav > .active > a:focus {
+		color: $color-success;
+		background-color: transparent;
+	}
+	@media (min-width: $screen-md-min){
+		.navbar-nav > .active > a,
+		.navbar-nav > .active > a:hover,
+		.navbar-nav > .active > a:focus {
+			color: $color-success;
+			background-color: transparent;
+			border-top: 6px solid $color-success;
+		}
+	}
+	.navbar-nav > .disabled > a,
+	.navbar-nav > .disabled > a:hover,
+	.navbar-nav > .disabled > a:focus {
+		color: #cccccc;
+		background-color: transparent;
+	}
+	.navbar-toggle {
+		border-color: #dddddd;
+	}
+	.navbar-toggle:hover,
+	.navbar-toggle:focus {
+		background-color: #dddddd;
+	}
+	.navbar-toggle .icon-bar {
+		background-color: #cccccc;
+	}
+	.navbar-collapse,
+	.navbar-form {
+		border-color: #15252d;
+	}
+	.navbar-nav > .dropdown > a:hover .caret,
+	.navbar-nav > .dropdown > a:focus .caret {
+		border-top-color: #c0c0c0;
+		border-bottom-color: #c0c0c0;
+	}
+	.navbar-nav > .open > a,
+	.navbar-nav > .open > a:hover,
+	.navbar-nav > .open > a:focus {
+		background-color: transparent;
+		color: #c0c0c0;
+		border-color: transparent;
+	}
+	.navbar-nav > .open.active > a,
+	.navbar-nav > .open.active > a:hover,
+	.navbar-nav > .open.active > a:focus {
+		background-color: transparent;
+		color: $color-success;
+		border-color: $color-success;
+	}
+	.navbar-nav > .open > a .caret,
+	.navbar-nav > .open > a:hover .caret,
+	.navbar-nav > .open > a:focus .caret {
+		border-top-color: #c0c0c0;
+		border-bottom-color: #c0c0c0;
+	}
+	.navbar-nav > .dropdown > a .caret {
+		border-top-color: #ffffff;
+		border-bottom-color: #ffffff;
+	}
+	.navbar-nav .dropdown-menu {
+		border-radius: 2px;
+		margin-top: -14px;
+		width: 200px;
+		-webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+
+		&.dropdown-md {
+			min-width: 280px;
+		}
+
+		&.dropdown-lg {
+			min-width: 400px;
+		}
+	}
+	.navbar-link {
+		color: #ffffff;
+	}
+	.navbar-link:hover {
+		color: #c0c0c0;
+	}
+
+	.avatar {
+		margin: -12px 0;
+	}
+}
+
+/***********************************************
+* Navbar > Tasks
+***********************************************/
+.dropdown-task {
+	margin: 20px 12px;
+
+	.progress {
+		height: 7px;
+		margin-bottom: 15px;
+		-webkit-box-shadow: none;
+		box-shadow: none;
+	}
+}
+
+/***********************************************
+* Navbar > Dropdown
+***********************************************/
+.dropdown-menu>li>a {
+	padding: 4px 20px;
+
+	.fa,
+	.ion {
+		margin-right: 10px;
+		width: 12px;
+		text-align: center;
+	}
+}
+
+.dropdown-menu .media {
+	border-bottom: 1px solid #E8E8E8;
+
+	&:last-child {
+		border-bottom: 0;
+	}
+
+	.media-left {
+		padding: 14px;
+	}
+
+	.media-heading {
+		margin: 10px 0 2px;
+	}
+}
+
+.dropdown-menu-footer {
+	border-top: 1px solid #E8E8E8;
+	font-size: 11px;
+	text-align: center;
+	text-transform: uppercase;
+	padding: 6px 0 2px;
+	color: #333;
+	display: block;
+	text-decoration: none;
+
+	&:hover,
+	&:focus {
+		color: #333;
+		text-decoration: none;
+	}
+}
+
+@media (max-width: $screen-sm-max) {
+	.last-dropdown {
+		left: auto;
+		right: 0;
+	}
+}
+
+/***********************************************
+* Navbar > Disable collapsing
+***********************************************/
+.container .navbar-header,
+.container .navbar-collapse {
+	margin-right: 0;
+	margin-left: 0;
+}
+
+.navbar-header {
+	float: left;
+}
+
+.navbar-collapse {
+	display: block !important;
+	height: auto !important;
+	padding-bottom: 0;
+	overflow: visible !important;
+	visibility: visible !important;
+}
+
+.navbar-toggle {
+	display: none;
+}
+.navbar-collapse {
+	border-top: 0;
+}
+
+.navbar-nav {
+	float: left;
+	margin: 0;
+}
+.navbar-nav > li {
+	float: left;
+}
+.navbar-nav > li > a {
+	padding: 15px;
+}
+
+.navbar-nav.navbar-right {
+	float: right;
+}
+
+.navbar .navbar-nav .open .dropdown-menu {
+	position: absolute;
+	float: left;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border: 1px solid rgba(0, 0, 0, .15);
+	border-width: 0 1px 1px;
+	border-radius: 0 0 4px 4px;
+	-webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+.navbar-default .navbar-nav .open .dropdown-menu > li > a {
+	color: #333;
+}
+.navbar .navbar-nav .open .dropdown-menu > li > a:hover,
+.navbar .navbar-nav .open .dropdown-menu > li > a:focus,
+.navbar .navbar-nav .open .dropdown-menu > .active > a,
+.navbar .navbar-nav .open .dropdown-menu > .active > a:hover,
+.navbar .navbar-nav .open .dropdown-menu > .active > a:focus {
+	color: #fff !important;
+	background-color: #428bca !important;
+}
+.navbar .navbar-nav .open .dropdown-menu > .disabled > a,
+.navbar .navbar-nav .open .dropdown-menu > .disabled > a:hover,
+.navbar .navbar-nav .open .dropdown-menu > .disabled > a:focus {
+	color: #999 !important;
+	background-color: transparent !important;
+}
+
+.navbar-form {
+	float: left;
+	width: auto;
+	padding-top: 0;
+	padding-bottom: 0;
+	margin-right: 0;
+	margin-left: 0;
+	border: 0;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.navbar-form .form-group {
+	display: inline-block;
+	margin-bottom: 0;
+	vertical-align: middle;
+}
+
+.navbar-form .form-control {
+	display: inline-block;
+	width: auto;
+	vertical-align: middle;
+}
+
+.navbar-form .form-control-static {
+	display: inline-block;
+}
+
+.navbar-form .input-group {
+	display: inline-table;
+	vertical-align: middle;
+}
+
+.navbar-form .input-group .input-group-addon,
+.navbar-form .input-group .input-group-btn,
+.navbar-form .input-group .form-control {
+	width: auto;
+}
+
+.navbar-form .input-group > .form-control {
+	width: 100%;
+}
+
+.navbar-form .control-label {
+	margin-bottom: 0;
+	vertical-align: middle;
+}
+
+.navbar-form .radio,
+.navbar-form .checkbox {
+	display: inline-block;
+	margin-top: 0;
+	margin-bottom: 0;
+	vertical-align: middle;
+}
+
+.navbar-form .radio label,
+.navbar-form .checkbox label {
+	padding-left: 0;
+}
+
+.navbar-form .radio input[type="radio"],
+.navbar-form .checkbox input[type="checkbox"] {
+	position: relative;
+	margin-left: 0;
+}
+
+.navbar-form .has-feedback .form-control-feedback {
+	top: 0;
+}
+
+/***********************************************
+* Navbar > Fixes
+***********************************************/
+.collapse {
+	display: none !important
+}
+
+.collapse.show {
+	display: flex !important;
+}
+
+.navbar-toggleable .navbar-nav .dropdown-menu {
+  position: absolute;
+  float: none;
+}
+
+.navbar-toggleable .navbar-nav {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+@media (min-width: 576px) {
+	.navbar-toggleable .navbar-nav .nav-link {
+		padding-right: 20px;
+		padding-left: 20px;
+	}
+}
