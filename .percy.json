@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "discovery": {
+    "launch-options":{
+      "executable":"/usr/bin/chromium-browser"
+    }
+  }
+}

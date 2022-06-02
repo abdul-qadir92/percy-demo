@@ -1,7 +1,7 @@
 (async () => {
   const puppeteer = require('puppeteer')
   const httpServer = require('http-server')
-  const { percySnapshot } = require('@percy/puppeteer')
+  const percySnapshot = require('@percy/puppeteer')
 
   const TEST_WIDTHS = [375, 768, 1280];
 
