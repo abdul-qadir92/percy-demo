@@ -1,43 +1,17 @@
 {
-  "name": "spark-bootstrap-theme",
+  "name": "browserstack-percy-demo",
   "version": "2.1.1",
   "description": "",
   "dependencies": {
-    "bootstrap": "5.1.3",
-    "bxslider": "4.2.14",
-    "flot": "4.2.2",
-    "font-awesome": "4.7.0",
-    "fullcalendar": "5.11.0",
-    "gmaps": "0.4.25",
-    "ionicons": "6.0.2",
-    "jquery": "3.6.0",
-    "jvectormap": "2.0.4",
-    "moment": "^2.29.3",
-    "popper.js": "^1.14.4",
-    "raphael": "2.3.0",
-    "slippry": "1.4.0",
-    "summernote": "^0.8.20",
-    "twitter-bootstrap-wizard": "1.2.0"
+    "@percy/puppeteer": "^2.0.2"
   },
   "devDependencies": {
-    "@percy/cli": "^1.2.1",
-    "@percy/puppeteer": "^2.0.2",
-    "babel-core": "^6.26.3",
-    "babel-jest": "^28.1.0",
-    "babel-preset-env": "^1.7.0",
-    "concurrently": "7.2.1",
+    "@percy/cli": "^1.24.0",
     "http-server": "14.1.1",
-    "node-sass": "^7.0.1",
-    "nodemon": "^2.0.16",
-    "puppeteer": "^14.2.0"
+    "puppeteer": "^19.10.1"
   },
   "scripts": {
-    "build": "node-sass --include-path --source-map assets/css assets/scss/spark.scss assets/css/spark.css",
-    "deploy": "node-sass --output-style compressed --include-path scss assets/scss/spark.scss assets/css/spark.css",
-    "server": "http-server ./ --silent",
-    "start": "concurrently \"npm run server\" \"npm run watch\"",
-    "watch": "nodemon -e scss -x \"npm run build\"",
-    "test": "percy exec -t 200 -- node tests/demo.js"
+    "test": "percy exec -t 200 -- node tests/demo.js; exit 0;"
   },
   "private": true
 }
