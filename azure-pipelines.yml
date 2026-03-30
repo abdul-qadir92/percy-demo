@@ -18,23 +18,27 @@ steps:
   displayName: 'Install Node.js'
 
 - bash: |
-    # IMPORTANT: Do NOT use $(VAR) inside the script block for secrets.
-    # Just use the environment variables we mapped below.
-    
-    export GITHUB_TOKEN=$MY_GITHUB_SECRET
-    export PERCY_TOKEN=$MY_PERCY_SECRET
-    export GH_TOKEN=$MY_GITHUB_SECRET # The 'gh' CLI looks for this specifically
-    
-    echo "The current user is: $(Build.RequestedFor)"
+    # 1. Setup Identity
+    git config --global user.email "abdulqadir.k@browserstack.com"
+    git config --global user.name "Abdul Qadir Khan"
 
-    # Git identity
-    git config --global user.email "devops@azure.com"
-    git config --global user.name "Azure Pipeline"
+    # 2. Map Secrets to local variables
+    export GITHUB_TOKEN=$MY_TOKEN
+    export GH_TOKEN=$MY_TOKEN
+    export PERCY_TOKEN=$MY_PERCY_TOKEN
 
+    # 3. FORCE LOGIN the GitHub CLI (The Nuclear Option)
+    # This bypasses any environment variable detection issues
+    echo "$GH_TOKEN" | gh auth login --with-token
+
+    # 4. Verify login (This will show in your logs)
+    gh auth status
+
+    # 5. Run the script
     chmod +x create-demo-pr.sh
     ./create-demo-pr.sh
   displayName: 'Generate Visual Changes and Percy PR'
   env:
-    # This is where the magic happens: mapping secrets to the script environment
-    MY_GITHUB_SECRET: $(SECRET_GITHUB_TOKEN)
-    MY_PERCY_SECRET: $(SECRET_PERCY_TOKEN)
+    # Ensure these names match your Library > Variable Group
+    MY_TOKEN: $(SECRET_GITHUB_TOKEN)
+    MY_PERCY_TOKEN: $(SECRET_PERCY_TOKEN)
