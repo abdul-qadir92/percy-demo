@@ -7,11 +7,12 @@ if ! [ -x "$(command -v hub)" ]; then
   exit 1
 fi
 
-
 NOW=`date +%d%H%M%S`
 BASE_BRANCH="main-$NOW"
 BRANCH="update-button-$NOW"
-if [ ${CI_USER_ID} != '' ]
+
+# FIX 1: Quote the variable to prevent syntax errors when it is empty
+if [ "$CI_USER_ID" != "" ]
 then
   BASE_BRANCH=${CI_USER_ID}_${BASE_BRANCH}
   BRANCH=${CI_USER_ID}_${BRANCH}
@@ -31,19 +32,21 @@ git checkout update-button-base
 git checkout -b $BRANCH
 git commit --amend -m 'Change Sign Up button style.'
 git push origin $BRANCH
-PR_NUM=$(hub pull-request -b $BASE_BRANCH -m 'Change Sign Up button style.' | grep -oE '[0-9]+')
+
+# FIX 2: Use awk to grab ONLY the text after the final slash in the URL to avoid grabbing the "92" in your username
+PR_NUM=$(hub pull-request -b $BASE_BRANCH -m 'Change Sign Up button style.' | awk -F/ '{print $NF}')
 
 export PERCY_BRANCH=$BRANCH
 export PERCY_PULL_REQUEST=$PR_NUM
 
 npm test
 
-# Create the fake "ci/service: Tests passed" notification on the PR.
+# FIX 3: Change the hardcoded repository from browserstack to your actual repository
 # Uses a personal access token (https://github.com/settings/tokens) which has scope "repo:status".
 curl \
-  -u $GITHUB_USER:$GITHUB_TOKEN \
+  -u "$GITHUB_USER:$GITHUB_TOKEN" \
   -d '{"state": "success", "target_url": "https://example.com/build/status", "description": "Tests passed", "context": "ci/service"}' \
-  "https://api.github.com/repos/browserstack/percy-demo/statuses/$(git rev-parse --verify HEAD)"
+  "https://api.github.com/repos/abdul-qadir92/percy-demo/statuses/$(git rev-parse --verify HEAD)"
 
 git checkout main
 git branch -D $BASE_BRANCH
