@@ -18,27 +18,23 @@ steps:
   displayName: 'Install Node.js'
 
 - bash: |
-    # 1. Setup Identity
+    # 1. Setup Git Identity
     git config --global user.email "abdulqadir.k@browserstack.com"
     git config --global user.name "Abdul Qadir Khan"
 
-    # 2. Map Secrets to local variables
-    export GITHUB_TOKEN=$MY_TOKEN
-    export GH_TOKEN=$MY_TOKEN
-    export PERCY_TOKEN=$MY_PERCY_TOKEN
+    # 2. DEBUG: Check if the token is arriving (it will show as ***)
+    if [ -z "$MY_TOKEN" ]; then
+      echo "##vso[task.logissue type=error]SECRET_GITHUB_TOKEN is empty! Check Variable Group."
+      exit 1
+    fi
 
-    # 3. FORCE LOGIN the GitHub CLI (The Nuclear Option)
-    # This bypasses any environment variable detection issues
-    echo "$GH_TOKEN" | gh auth login --with-token
-
-    # 4. Verify login (This will show in your logs)
-    gh auth status
-
-    # 5. Run the script
+    # 3. Just run the script. Do NOT run 'gh auth login'. 
+    # The 'gh' CLI will automatically use $GH_TOKEN if we map it below.
     chmod +x create-demo-pr.sh
     ./create-demo-pr.sh
   displayName: 'Generate Visual Changes and Percy PR'
   env:
-    # Ensure these names match your Library > Variable Group
-    MY_TOKEN: $(SECRET_GITHUB_TOKEN)
-    MY_PERCY_TOKEN: $(SECRET_PERCY_TOKEN)
+    # Use 'GH_TOKEN' as the key so the CLI finds it automatically
+    GH_TOKEN: $(SECRET_GITHUB_TOKEN)
+    GITHUB_TOKEN: $(SECRET_GITHUB_TOKEN)
+    PERCY_TOKEN: $(SECRET_PERCY_TOKEN)
