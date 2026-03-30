@@ -16,26 +16,32 @@ steps:
     versionSpec: '16.x'
 
 - script: |
-    # Install 'hub' CLI required by the PR script
+    # Install 'hub' CLI
     sudo apt-get update
     sudo apt-get install -y hub
 
-    # 1. Setup Git Identity & Authentication
-    git config --global user.email "$(Build.RequestedForEmail)"
-    git config --global user.name "$(Build.RequestedFor)"
+    # 1. Safely Setup Environment Variables
+    # Provide a fallback just in case ADO doesn't provide the email on automated triggers
+    REQUESTED_EMAIL="$(Build.RequestedForEmail)"
+    if [ -z "$REQUESTED_EMAIL" ]; then
+      REQUESTED_EMAIL="ci-bot@percy-demo.com"
+    fi
     
-    # Store the credentials so Git and Hub can use them natively
-    git config --global credential.helper store
-    echo "https://x-access-token:${SECRET_GITHUB_TOKEN}@github.com" > ~/.git-credentials
-
-    # 2. Setup Environment Variables
     export GITHUB_USER="$(Build.RequestedFor)"
     export GITHUB_TOKEN="${SECRET_GITHUB_TOKEN}"
     export PERCY_TOKEN="${SECRET_PERCY_TOKEN}"
-    export CI_USER_ID=$(echo $(Build.RequestedForEmail) | cut -d@ -f1)
+    export CI_USER_ID=$(echo "$REQUESTED_EMAIL" | cut -d@ -f1)
     export PUPPETEER_SKIP_DOWNLOAD=true
 
     echo "The current user id is: ${CI_USER_ID}"
+
+    # 2. Setup Git Identity & Foolproof Authentication
+    git config --global user.email "$REQUESTED_EMAIL"
+    git config --global user.name "$GITHUB_USER"
+    
+    # Overwrite the origin URL specifically for this local repository checkout 
+    # to guarantee it uses the GitHub Personal Access Token
+    git remote set-url origin "https://x-access-token:${SECRET_GITHUB_TOKEN}@github.com/abdul-qadir92/percy-demo.git"
 
     # 3. Install Dependencies
     npm install
@@ -59,7 +65,9 @@ steps:
 
     # 5. Execute PR script and capture logs
     mkdir -p logs
-    sh create-demo-pr.sh 2>&1 | tee logs/pr_output.log
+    
+    # FIX: Run explicitly with bash instead of sh to prevent the unexpected operator error
+    bash create-demo-pr.sh 2>&1 | tee logs/pr_output.log
     
     # Extract the Finalized build line
     grep "Finalized build" logs/pr_output.log >> logs/log_$(Build.BuildId).txt
