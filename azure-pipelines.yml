@@ -36,7 +36,6 @@ steps:
     export GITHUB_TOKEN="${MY_GITHUB_TOKEN}"
     export PERCY_TOKEN="${MY_PERCY_TOKEN}"
     export CI_USER_ID=$(echo "$REQUESTED_EMAIL" | cut -d@ -f1)
-    export PUPPETEER_SKIP_DOWNLOAD=true
 
     echo "The current user id is: ${CI_USER_ID}"
 
