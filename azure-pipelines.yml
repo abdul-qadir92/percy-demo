@@ -18,24 +18,23 @@ steps:
   displayName: 'Install Node.js'
 
 - bash: |
-    # Set Git Config
+    # IMPORTANT: Do NOT use $(VAR) inside the script block for secrets.
+    # Just use the environment variables we mapped below.
+    
+    export GITHUB_TOKEN=$MY_GITHUB_SECRET
+    export PERCY_TOKEN=$MY_PERCY_SECRET
+    export GH_TOKEN=$MY_GITHUB_SECRET # The 'gh' CLI looks for this specifically
+    
+    echo "The current user is: $(Build.RequestedFor)"
+
+    # Git identity
     git config --global user.email "devops@azure.com"
     git config --global user.name "Azure Pipeline"
-    
-    # 1. Replicate the Jenkins "Visual Change" logic
-    # We create the branch locally, modify files, and commit
-    git checkout -b update-button-base
-    cp changed_assets/css/spark.css assets/css/spark.css
-    cp changed_assets/scss/01-settings/_colors.scss assets/scss/01-settings/_colors.scss
-    git add assets
-    git commit -m "Injected visual changes for demo"
-    
-    # 2. Run the PR script
-    # We pass the secrets as environment variables
-    export GITHUB_TOKEN=$(SECRET_GITHUB_TOKEN)
-    export PERCY_TOKEN=$(SECRET_PERCY_TOKEN)
-    export GH_TOKEN=$(SECRET_GITHUB_TOKEN) # Required for 'gh' CLI
-    
+
     chmod +x create-demo-pr.sh
     ./create-demo-pr.sh
   displayName: 'Generate Visual Changes and Percy PR'
+  env:
+    # This is where the magic happens: mapping secrets to the script environment
+    MY_GITHUB_SECRET: $(SECRET_GITHUB_TOKEN)
+    MY_PERCY_SECRET: $(SECRET_PERCY_TOKEN)
