@@ -20,9 +20,11 @@ steps:
     sudo apt-get update
     sudo apt-get install -y hub
 
-    # 1. Setup Git Identity
+    # 1. Setup Git Identity & Authentication
     git config --global user.email "$(Build.RequestedForEmail)"
     git config --global user.name "$(Build.RequestedFor)"
+    # Tell Git to inject the PAT for all HTTPS pushes to GitHub
+    git config --global url."https://${SECRET_GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
 
     # 2. Setup Environment Variables
     export GITHUB_USER="$(Build.RequestedFor)"
@@ -37,7 +39,6 @@ steps:
     npm install
 
     # 4. Prepare Branch and Files
-    # ADO uses a detached HEAD. Explicitly fetch and track main locally first.
     git fetch origin main
     git checkout main
     
