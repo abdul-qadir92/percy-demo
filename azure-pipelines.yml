@@ -1,7 +1,5 @@
-trigger:
-  branches:
-    include:
-      - main
+# 1. Disable automatic runs when code is pushed to main
+trigger: none
 # THE FIX: Explicitly disable Pull Request triggers to stop the infinite loop
 pr: none
 
