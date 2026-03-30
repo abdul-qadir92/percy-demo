@@ -3,18 +3,14 @@ trigger:
     include:
       - main
 
+# THIS IS THE NEW MISSING PIECE:
+variables:
+- group: 'percy-secrets' # <--- Put your exact Variable Group name here
+
 pool:
   vmImage: 'ubuntu-latest'
 
-# NOTE: You must define SECRET_GITHUB_TOKEN and SECRET_PERCY_TOKEN
-# as Secret Variables in the Azure DevOps Pipeline UI.
-
 steps:
-- task: NodeTool@0
-  displayName: 'Install Node.js 16.x'
-  inputs:
-    versionSpec: '16.x'
-
 - script: |
     # ==========================================
     # DEBUG: Check if token is empty
@@ -73,5 +69,15 @@ steps:
 
   displayName: 'Create Percy build and upload snapshots'
   env:
+    # This specifically maps the variable from the Variable Group into the script environment
     SECRET_GITHUB_TOKEN: $(SECRET_GITHUB_TOKEN)
     SECRET_PERCY_TOKEN: $(SECRET_PERCY_TOKEN)
+
+# Archive the extracted log as an artifact
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Percy Log Artifact'
+  inputs:
+    targetPath: 'logs/log_$(Build.BuildId).txt'
+    artifact: 'PercyLog'
+    publishLocation: 'pipeline'
+  condition: succeeded()
