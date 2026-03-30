@@ -16,12 +16,19 @@ steps:
     versionSpec: '16.x'
 
 - script: |
+    # ==========================================
+    # DEBUG: Check if token is empty
+    # ==========================================
+    if [ -z "$SECRET_GITHUB_TOKEN" ]; then
+      echo "##[error]CRITICAL FAILURE: The SECRET_GITHUB_TOKEN is empty! Azure DevOps is not passing the variable to the script."
+      exit 1
+    fi
+
     # Install 'hub' CLI
     sudo apt-get update
     sudo apt-get install -y hub
 
     # 1. Safely Setup Environment Variables
-    # Provide a fallback just in case ADO doesn't provide the email on automated triggers
     REQUESTED_EMAIL="$(Build.RequestedForEmail)"
     if [ -z "$REQUESTED_EMAIL" ]; then
       REQUESTED_EMAIL="ci-bot@percy-demo.com"
@@ -35,12 +42,9 @@ steps:
 
     echo "The current user id is: ${CI_USER_ID}"
 
-    # 2. Setup Git Identity & Foolproof Authentication
+    # 2. Setup Git Identity & Authentication
     git config --global user.email "$REQUESTED_EMAIL"
     git config --global user.name "$GITHUB_USER"
-    
-    # Overwrite the origin URL specifically for this local repository checkout 
-    # to guarantee it uses the GitHub Personal Access Token
     git remote set-url origin "https://x-access-token:${SECRET_GITHUB_TOKEN}@github.com/abdul-qadir92/percy-demo.git"
 
     # 3. Install Dependencies
@@ -49,8 +53,6 @@ steps:
     # 4. Prepare Branch and Files
     git fetch origin main
     git checkout main
-    
-    # Now branch off for the updates
     git checkout -b update-button-base
     
     mkdir -p assets/css assets/scss/01-settings
@@ -59,21 +61,14 @@ steps:
     
     git add assets
     git commit -m "Update button style changes"
-    
-    # Return to main before creating the PR
     git checkout main
 
     # 5. Execute PR script and capture logs
     mkdir -p logs
-    
-    # FIX: Run explicitly with bash instead of sh to prevent the unexpected operator error
     bash create-demo-pr.sh 2>&1 | tee logs/pr_output.log
     
-    # Extract the Finalized build line
     grep "Finalized build" logs/pr_output.log >> logs/log_$(Build.BuildId).txt
     echo "Current directory: $(pwd)"
-
-    # Clean up local branch
     git branch -D update-button-base
 
   displayName: 'Create Percy build and upload snapshots'
