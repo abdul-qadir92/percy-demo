@@ -16,7 +16,11 @@ steps:
     versionSpec: '16.x'
 
 - script: |
-    # 1. Setup Git Identity (Required for commits)
+    # Install 'hub' CLI required by the PR script
+    sudo apt-get update
+    sudo apt-get install -y hub
+
+    # 1. Setup Git Identity
     git config --global user.email "$(Build.RequestedForEmail)"
     git config --global user.name "$(Build.RequestedFor)"
 
@@ -33,9 +37,13 @@ steps:
     npm install
 
     # 4. Prepare Branch and Files
+    # ADO uses a detached HEAD. Explicitly fetch and track main locally first.
+    git fetch origin main
+    git checkout main
+    
+    # Now branch off for the updates
     git checkout -b update-button-base
     
-    # Ensure directories exist if not already tracked
     mkdir -p assets/css assets/scss/01-settings
     cp changed_assets/css/spark.css assets/css/spark.css
     cp changed_assets/scss/01-settings/_colors.scss assets/scss/01-settings/_colors.scss
@@ -48,7 +56,6 @@ steps:
 
     # 5. Execute PR script and capture logs
     mkdir -p logs
-    # Using 'tee' captures the output to a file since ADO doesn't allow reading raw build logs mid-flight
     sh create-demo-pr.sh 2>&1 | tee logs/pr_output.log
     
     # Extract the Finalized build line
@@ -62,12 +69,3 @@ steps:
   env:
     SECRET_GITHUB_TOKEN: $(SECRET_GITHUB_TOKEN)
     SECRET_PERCY_TOKEN: $(SECRET_PERCY_TOKEN)
-
-# Archive the extracted log as an artifact (equivalent to archiveArtifacts)
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Percy Log Artifact'
-  inputs:
-    targetPath: 'logs/log_$(Build.BuildId).txt'
-    artifact: 'PercyLog'
-    publishLocation: 'pipeline'
-  condition: succeeded()
