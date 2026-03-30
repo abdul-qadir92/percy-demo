@@ -14,9 +14,8 @@ steps:
     # ==========================================
     # DEBUG: Check if token is empty
     # ==========================================
-    if [ -z "$SECRET_GITHUB_TOKEN" ]; then
-      echo "##[error]CRITICAL FAILURE: The SECRET_GITHUB_TOKEN is empty! Azure DevOps is not passing the variable to the script."
-      echo "Hint: Did you authorize the Variable Group? Are the variable names exactly 'SECRET_GITHUB_TOKEN' inside the Library?"
+    if [ -z "$MY_GITHUB_TOKEN" ]; then
+      echo "##[error]CRITICAL FAILURE: The Variable Group is still not passing the secret to Bash!"
       exit 1
     fi
     
@@ -33,8 +32,9 @@ steps:
     fi
     
     export GITHUB_USER="$(Build.RequestedFor)"
-    export GITHUB_TOKEN="${SECRET_GITHUB_TOKEN}"
-    export PERCY_TOKEN="${SECRET_PERCY_TOKEN}"
+    # Notice we are now using the MY_ prefixed variables here!
+    export GITHUB_TOKEN="${MY_GITHUB_TOKEN}"
+    export PERCY_TOKEN="${MY_PERCY_TOKEN}"
     export CI_USER_ID=$(echo "$REQUESTED_EMAIL" | cut -d@ -f1)
     export PUPPETEER_SKIP_DOWNLOAD=true
 
@@ -43,7 +43,7 @@ steps:
     # 2. Setup Git Identity & Authentication
     git config --global user.email "$REQUESTED_EMAIL"
     git config --global user.name "$GITHUB_USER"
-    git remote set-url origin "https://x-access-token:${SECRET_GITHUB_TOKEN}@github.com/abdul-qadir92/percy-demo.git"
+    git remote set-url origin "https://x-access-token:${MY_GITHUB_TOKEN}@github.com/abdul-qadir92/percy-demo.git"
 
     # 3. Install Dependencies
     npm install
@@ -71,9 +71,9 @@ steps:
 
   displayName: 'Create Percy build and upload snapshots'
   env:
-    # This specifically maps the variable from the Variable Group into the script environment
-    SECRET_GITHUB_TOKEN: $(SECRET_GITHUB_TOKEN)
-    SECRET_PERCY_TOKEN: $(SECRET_PERCY_TOKEN)
+    # THE FIX: Rename the target environment variables to avoid shadowing
+    MY_GITHUB_TOKEN: $(SECRET_GITHUB_TOKEN)
+    MY_PERCY_TOKEN: $(SECRET_PERCY_TOKEN)
 
 # Archive the extracted log as an artifact
 - task: PublishPipelineArtifact@1
