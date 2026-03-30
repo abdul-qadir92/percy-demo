@@ -23,8 +23,10 @@ steps:
     # 1. Setup Git Identity & Authentication
     git config --global user.email "$(Build.RequestedForEmail)"
     git config --global user.name "$(Build.RequestedFor)"
-    # Tell Git to use x-access-token as the user, and the PAT as the password
-    git config --global url."https://x-access-token:${SECRET_GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
+    
+    # Store the credentials so Git and Hub can use them natively
+    git config --global credential.helper store
+    echo "https://x-access-token:${SECRET_GITHUB_TOKEN}@github.com" > ~/.git-credentials
 
     # 2. Setup Environment Variables
     export GITHUB_USER="$(Build.RequestedFor)"
