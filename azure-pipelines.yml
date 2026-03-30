@@ -1,40 +1,81 @@
 trigger:
-- main
+  branches:
+    include:
+      - main
 
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-- group: percy-secrets # Ensure this group has SECRET_GITHUB_TOKEN and SECRET_PERCY_TOKEN
+# NOTE: You must define SECRET_GITHUB_TOKEN, SECRET_PERCY_TOKEN, 
+# and SLACK_WEBHOOK_URL as Secret Variables in the Azure DevOps Pipeline UI.
 
 steps:
-- checkout: self
-  persistCredentials: true
-  fetchDepth: 0 # Fetch all branches so 'update-button-base' is visible
-
 - task: NodeTool@0
+  displayName: 'Install Node.js 16.x'
   inputs:
     versionSpec: '16.x'
-  displayName: 'Install Node.js'
 
-- bash: |
-    # 1. Setup Git Identity
-    git config --global user.email "abdulqadir.k@browserstack.com"
-    git config --global user.name "Abdul Qadir Khan"
+- script: |
+    # 1. Setup Git Identity (Required for commits)
+    git config --global user.email "$(Build.RequestedForEmail)"
+    git config --global user.name "$(Build.RequestedFor)"
 
-    # 2. DEBUG: Check if the token is arriving (it will show as ***)
-    if [ -z "$MY_TOKEN" ]; then
-      echo "##vso[task.logissue type=error]SECRET_GITHUB_TOKEN is empty! Check Variable Group."
-      exit 1
-    fi
+    # 2. Setup Environment Variables
+    export GITHUB_USER="$(Build.RequestedFor)"
+    export GITHUB_TOKEN="${SECRET_GITHUB_TOKEN}"
+    export PERCY_TOKEN="${SECRET_PERCY_TOKEN}"
+    export CI_USER_ID=$(echo $(Build.RequestedForEmail) | cut -d@ -f1)
+    export PUPPETEER_SKIP_DOWNLOAD=true
 
-    # 3. Just run the script. Do NOT run 'gh auth login'. 
-    # The 'gh' CLI will automatically use $GH_TOKEN if we map it below.
-    chmod +x create-demo-pr.sh
-    ./create-demo-pr.sh
-  displayName: 'Generate Visual Changes and Percy PR'
+    echo "The current user id is: ${CI_USER_ID}"
+
+    # 3. Install Dependencies
+    npm install
+
+    # 4. Prepare Branch and Files
+    git checkout -b update-button-base
+    
+    # Ensure directories exist if not already tracked
+    mkdir -p assets/css assets/scss/01-settings
+    cp changed_assets/css/spark.css assets/css/spark.css
+    cp changed_assets/scss/01-settings/_colors.scss assets/scss/01-settings/_colors.scss
+    
+    git add assets
+    git commit -m "Update button style changes"
+    
+    # Return to main before creating the PR
+    git checkout main
+
+    # 5. Execute PR script and capture logs
+    mkdir -p logs
+    # Using 'tee' captures the output to a file since ADO doesn't allow reading raw build logs mid-flight like Jenkins
+    sh create-demo-pr.sh 2>&1 | tee logs/pr_output.log
+    
+    # Extract the Finalized build line
+    grep "Finalized build" logs/pr_output.log >> logs/log_$(Build.BuildId).txt
+    echo "Current directory: $(pwd)"
+
+    # Clean up local branch
+    git branch -D update-button-base
+
+  displayName: 'Create Percy build and upload snapshots'
   env:
-    # Use 'GH_TOKEN' as the key so the CLI finds it automatically
-    GH_TOKEN: $(SECRET_GITHUB_TOKEN)
-    GITHUB_TOKEN: $(SECRET_GITHUB_TOKEN)
-    PERCY_TOKEN: $(SECRET_PERCY_TOKEN)
+    SECRET_GITHUB_TOKEN: $(SECRET_GITHUB_TOKEN)
+    SECRET_PERCY_TOKEN: $(SECRET_PERCY_TOKEN)
+
+# Archive the extracted log as an artifact (equivalent to archiveArtifacts)
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Percy Log Artifact'
+  inputs:
+    targetPath: 'logs/log_$(Build.BuildId).txt'
+    artifact: 'PercyLog'
+    publishLocation: 'pipeline'
+  condition: succeeded()
+
+# Slack Notification (Custom script for Failure)
+- script: |
+    curl -X POST -H 'Content-type: application/json' \
+    --data '{"attachments": [{"color": "#FF9FA1", "text": "FAILURE: `$(Build.DefinitionName)` #$(Build.BuildId):\n$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)"}]}' \
+    $(SLACK_WEBHOOK_URL)
+  displayName: 'Notify Slack on Failure'
+  condition: failed() # Only runs if previous steps fail
