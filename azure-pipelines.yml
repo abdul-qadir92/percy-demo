@@ -3,9 +3,8 @@ trigger:
     include:
       - main
 
-# THIS IS THE NEW MISSING PIECE:
 variables:
-- group: 'percy-secrets' # <--- Put your exact Variable Group name here
+- group: percy-secrets
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -17,8 +16,11 @@ steps:
     # ==========================================
     if [ -z "$SECRET_GITHUB_TOKEN" ]; then
       echo "##[error]CRITICAL FAILURE: The SECRET_GITHUB_TOKEN is empty! Azure DevOps is not passing the variable to the script."
+      echo "Hint: Did you authorize the Variable Group? Are the variable names exactly 'SECRET_GITHUB_TOKEN' inside the Library?"
       exit 1
     fi
+    
+    echo "SUCCESS: Token successfully loaded from Variable Group!"
 
     # Install 'hub' CLI
     sudo apt-get update
