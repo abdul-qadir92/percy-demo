@@ -6,8 +6,8 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-# NOTE: You must define SECRET_GITHUB_TOKEN, SECRET_PERCY_TOKEN, 
-# and SLACK_WEBHOOK_URL as Secret Variables in the Azure DevOps Pipeline UI.
+# NOTE: You must define SECRET_GITHUB_TOKEN and SECRET_PERCY_TOKEN
+# as Secret Variables in the Azure DevOps Pipeline UI.
 
 steps:
 - task: NodeTool@0
@@ -48,7 +48,7 @@ steps:
 
     # 5. Execute PR script and capture logs
     mkdir -p logs
-    # Using 'tee' captures the output to a file since ADO doesn't allow reading raw build logs mid-flight like Jenkins
+    # Using 'tee' captures the output to a file since ADO doesn't allow reading raw build logs mid-flight
     sh create-demo-pr.sh 2>&1 | tee logs/pr_output.log
     
     # Extract the Finalized build line
@@ -71,11 +71,3 @@ steps:
     artifact: 'PercyLog'
     publishLocation: 'pipeline'
   condition: succeeded()
-
-# Slack Notification (Custom script for Failure)
-- script: |
-    curl -X POST -H 'Content-type: application/json' \
-    --data '{"attachments": [{"color": "#FF9FA1", "text": "FAILURE: `$(Build.DefinitionName)` #$(Build.BuildId):\n$(System.TeamFoundationCollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)"}]}' \
-    $(SLACK_WEBHOOK_URL)
-  displayName: 'Notify Slack on Failure'
-  condition: failed() # Only runs if previous steps fail
