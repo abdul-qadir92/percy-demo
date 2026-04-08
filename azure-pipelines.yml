@@ -1,4 +1,4 @@
-trigger: none # Kept manual so you control when baselines are generated
+trigger: none
 pr: none
 
 variables:
@@ -8,30 +8,76 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: NodeTool@0
-  displayName: 'Install Node.js 16.x'
-  inputs:
-    versionSpec: '16.x'
-
 - script: |
-    if [ -z "$MY_PERCY_TOKEN" ]; then
-      echo "##[error]CRITICAL FAILURE: The Variable Group is still not passing the secret to Bash!"
+    # ==========================================
+    # DEBUG: Check if token is empty
+    # ==========================================
+    if [ -z "$MY_GITHUB_TOKEN" ]; then
+      echo "##[error]CRITICAL FAILURE: The Variable Group is not passing the secret to Bash!"
       exit 1
     fi
     
-    echo "SUCCESS: Percy token loaded."
+    echo "SUCCESS: Token successfully loaded from Variable Group!"
 
-    # 1. Install Dependencies
+    # Install 'hub' CLI
+    sudo apt-get update
+    sudo apt-get install -y hub
+
+    # 1. Safely Setup Environment Variables
+    REQUESTED_EMAIL="$(Build.RequestedForEmail)"
+    if [ -z "$REQUESTED_EMAIL" ]; then
+      REQUESTED_EMAIL="ci-bot@percy-demo.com"
+    fi
+    
+    export GITHUB_USER="$(Build.RequestedFor)"
+    export GITHUB_TOKEN="${MY_GITHUB_TOKEN}"
+    export PERCY_TOKEN="${MY_PERCY_TOKEN}"
+    export CI_USER_ID=$(echo "$REQUESTED_EMAIL" | cut -d@ -f1)
+
+    echo "The current user id is: ${CI_USER_ID}"
+
+    # 2. Setup Git Identity & Authentication
+    git config --global user.email "$REQUESTED_EMAIL"
+    git config --global user.name "$GITHUB_USER"
+    git remote set-url origin "https://x-access-token:${MY_GITHUB_TOKEN}@github.com/abdul-qadir92/percy-demo.git"
+
+    # 3. Install Dependencies
     npm install
 
-    # 2. Execute Percy directly on the current branch (main)
-    # We completely bypassed create-demo-pr.sh because we don't want a PR!
-    npm test
+    # 4. Prepare Branch and Files (Inject the modified CSS)
+    git fetch origin main
+    git checkout main
+    git checkout -b update-button-base
+    
+    mkdir -p assets/css assets/scss/01-settings
+    cp changed_assets/css/spark.css assets/css/spark.css
+    cp changed_assets/scss/01-settings/_colors.scss assets/scss/01-settings/_colors.scss
+    
+    git add assets
+    git commit -m "Update button style changes"
+    git checkout main
 
-  displayName: 'Generate Percy Baseline on Main'
+    # 5. Execute PR script and capture logs
+    mkdir -p logs
+    
+    # Run the bash script that creates the new branch and pushes the PR
+    bash create-demo-pr.sh 2>&1 | tee logs/pr_output.log
+    
+    grep "Finalized build" logs/pr_output.log >> logs/log_$(Build.BuildId).txt
+    echo "Current directory: $(pwd)"
+    git branch -D update-button-base
+
+  displayName: 'Create Percy build, trigger PR, and upload snapshots'
   env:
-    # Percy automatically looks for this exact environment variable
-    PERCY_TOKEN: $(SECRET_PERCY_TOKEN)
+    # Use MY_ prefixes to avoid Azure DevOps variable shadowing
+    MY_GITHUB_TOKEN: $(SECRET_GITHUB_TOKEN)
     MY_PERCY_TOKEN: $(SECRET_PERCY_TOKEN)
-    # Explicitly tell Percy this is the baseline branch
-    PERCY_BRANCH: 'main'
+
+# Archive the extracted log as an artifact
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Percy Log Artifact'
+  inputs:
+    targetPath: 'logs/log_$(Build.BuildId).txt'
+    artifact: 'PercyLog'
+    publishLocation: 'pipeline'
+  condition: succeeded()
