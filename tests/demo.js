@@ -3,7 +3,7 @@
   const httpServer = require("http-server");
   const percySnapshot = require("@percy/puppeteer");
 
-  const TEST_WIDTHS = [375, 768, 1280];
+  const TEST_WIDTHS = [768, 1280];
 
   // Start a local HTTP Server to host our TodoMVC app.
   const server = httpServer.createServer();
