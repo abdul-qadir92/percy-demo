@@ -33,11 +33,15 @@ git checkout -b $BRANCH
 git commit --amend -m 'Change Sign Up button style.'
 git push origin $BRANCH
 
-# FIX 2: Use awk to grab ONLY the text after the final slash in the URL to avoid grabbing the "92" in your username
 PR_NUM=$(hub pull-request -b $BASE_BRANCH -m 'Change Sign Up button style.' | awk -F/ '{print $NF}')
 
+# Force Percy to use the newly created local commit, overriding Azure DevOps
+export PERCY_COMMIT=$(git rev-parse HEAD)
 export PERCY_BRANCH=$BRANCH
 export PERCY_PULL_REQUEST=$PR_NUM
+
+# Debug check to ensure the variables aren't empty
+echo "DEBUG: Telling Percy to post to PR #$PERCY_PULL_REQUEST on Commit $PERCY_COMMIT"
 
 npm test
 
