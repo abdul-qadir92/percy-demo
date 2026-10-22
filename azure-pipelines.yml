@@ -9,12 +9,27 @@ pool:
 
 steps:
 - script: |
+    # ==========================================
+    # DEBUG: Test token directly against GitHub API
+    # ==========================================
     if [ -z "$MY_GITHUB_TOKEN" ]; then
       echo "##[error]CRITICAL FAILURE: The Variable Group is not passing the secret to Bash!"
       exit 1
     fi
     
-    echo "SUCCESS: Token successfully loaded from Variable Group!"
+    echo "Pinging GitHub API to verify token..."
+    HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $MY_GITHUB_TOKEN" https://api.github.com/user)
+    
+    if [ "$HTTP_STATUS" == "401" ] || [ "$HTTP_STATUS" == "403" ]; then
+      echo "##[error]CRITICAL FAILURE: GitHub actively REJECTED the token (HTTP $HTTP_STATUS)."
+      echo "##[error]The token in your Variable Group is either revoked, expired, or contains a hidden space/newline."
+      exit 1
+    elif [ "$HTTP_STATUS" == "200" ]; then
+      echo "SUCCESS: GitHub accepted the token payload!"
+    else
+      echo "##[warning]Unexpected GitHub API response: $HTTP_STATUS"
+    fi
+    # ==========================================
 
     # Install 'hub' CLI
     sudo apt-get update
@@ -31,21 +46,15 @@ steps:
     export PERCY_TOKEN="${MY_PERCY_TOKEN}"
     export CI_USER_ID=$(echo "$REQUESTED_EMAIL" | cut -d@ -f1)
 
-    echo "The current user id is: ${CI_USER_ID}"
-
-    # 2. Setup Git Identity & Authentication (The ASKPASS Method)
+    # 2. Setup Git Identity & Authentication
     git config --global user.email "$REQUESTED_EMAIL"
     git config --global user.name "$GITHUB_USER"
     
-    # Create a secure executable that echoes the token
-    echo 'echo $MY_GITHUB_TOKEN' > ~/.git-askpass
-    chmod +x ~/.git-askpass
+    # Strip ADO credentials
+    git config --local --unset-all http.extraheader || true
     
-    # Force Git to execute this script whenever it needs a password
-    export GIT_ASKPASS=~/.git-askpass
-    
-    # Force the URL to standard HTTPS so Git is forced to prompt for a password
-    git remote set-url origin "https://github.com/abdul-qadir92/percy-demo.git"
+    # Use standard GitHub PAT URL injection
+    git remote set-url origin "https://x-access-token:${MY_GITHUB_TOKEN}@github.com/abdul-qadir92/percy-demo.git"
 
     # 3. Install Dependencies
     npm install
@@ -68,14 +77,13 @@ steps:
     bash create-demo-pr.sh 2>&1 | tee logs/pr_output.log
     
     grep "Finalized build" logs/pr_output.log >> logs/log_$(Build.BuildId).txt
-    echo "Current directory: $(pwd)"
     git branch -D update-button-base
 
   displayName: 'Create Percy build, trigger PR, and upload snapshots'
   env:
     MY_GITHUB_TOKEN: $(SECRET_GITHUB_TOKEN)
     MY_PERCY_TOKEN: $(SECRET_PERCY_TOKEN)
-
+    
 # Archive the extracted log as an artifact
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Percy Log Artifact'
