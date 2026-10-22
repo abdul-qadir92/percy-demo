@@ -33,20 +33,18 @@ steps:
 
     echo "The current user id is: ${CI_USER_ID}"
 
-    # 2. Setup Git Identity & Authentication (.netrc method)
+    # 2. Setup Git Identity & Authentication (The ASKPASS Method)
     git config --global user.email "$REQUESTED_EMAIL"
     git config --global user.name "$GITHUB_USER"
     
-    # Write the PAT directly to the server's credential store
-    echo "machine github.com login x-access-token password ${MY_GITHUB_TOKEN}" > ~/.netrc
-    chmod 600 ~/.netrc
-
-    # Strip out Azure DevOps background tokens so they do not override .netrc
-    git config --local --unset-all http.extraheader || true
-    git config --global --unset-all http.extraheader || true
-    git config --system --unset-all http.extraheader || true
+    # Create a secure executable that echoes the token
+    echo 'echo $MY_GITHUB_TOKEN' > ~/.git-askpass
+    chmod +x ~/.git-askpass
     
-    # Set the remote URL to a clean HTTPS path (no token embedded)
+    # Force Git to execute this script whenever it needs a password
+    export GIT_ASKPASS=~/.git-askpass
+    
+    # Force the URL to standard HTTPS so Git is forced to prompt for a password
     git remote set-url origin "https://github.com/abdul-qadir92/percy-demo.git"
 
     # 3. Install Dependencies
