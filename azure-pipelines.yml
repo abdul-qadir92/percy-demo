@@ -36,15 +36,16 @@ steps:
 
     echo "The current user id is: ${CI_USER_ID}"
 
-    # 2. Setup Git Identity & Authentication
+   # 2. Setup Git Identity & Authentication
     git config --global user.email "$REQUESTED_EMAIL"
     git config --global user.name "$GITHUB_USER"
-    # THE FIX: Wipe out Azure DevOps' hidden authentication headers
-    git config --local --unset-all http.extraheader || true
-    git config --local --unset-all http.https://github.com/abdul-qadir92/percy-demo.git.extraheader || true
-    git config --local --remove-section http.https://github.com/ || true
-    # Now Git has no choice but to use your properly scoped PAT
-    git remote set-url origin "https://abdul-qadir92:${MY_GITHUB_TOKEN}@github.com/abdul-qadir92/percy-demo.git"
+    
+    # THE FIX: Create a secure .netrc file to forcefully route credentials to GitHub
+    echo "machine github.com login x-access-token password ${MY_GITHUB_TOKEN}" > ~/.netrc
+    chmod 600 ~/.netrc
+
+    # Reset the origin URL back to standard HTTPS (no embedded credentials)
+    git remote set-url origin "https://github.com/abdul-qadir92/percy-demo.git"
 
     # 3. Install Dependencies
     npm install
