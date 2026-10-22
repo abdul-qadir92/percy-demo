@@ -9,9 +9,6 @@ pool:
 
 steps:
 - script: |
-    # ==========================================
-    # DEBUG: Check if token is empty
-    # ==========================================
     if [ -z "$MY_GITHUB_TOKEN" ]; then
       echo "##[error]CRITICAL FAILURE: The Variable Group is not passing the secret to Bash!"
       exit 1
@@ -36,21 +33,26 @@ steps:
 
     echo "The current user id is: ${CI_USER_ID}"
 
-    # 2. Setup Git Identity & Authentication
+    # 2. Setup Git Identity & Authentication (.netrc method)
     git config --global user.email "$REQUESTED_EMAIL"
     git config --global user.name "$GITHUB_USER"
     
-    # THE FIX: Create a secure .netrc file to forcefully route credentials to GitHub
+    # Write the PAT directly to the server's credential store
     echo "machine github.com login x-access-token password ${MY_GITHUB_TOKEN}" > ~/.netrc
     chmod 600 ~/.netrc
 
-    # Reset the origin URL back to standard HTTPS (no embedded credentials)
+    # Strip out Azure DevOps background tokens so they do not override .netrc
+    git config --local --unset-all http.extraheader || true
+    git config --global --unset-all http.extraheader || true
+    git config --system --unset-all http.extraheader || true
+    
+    # Set the remote URL to a clean HTTPS path (no token embedded)
     git remote set-url origin "https://github.com/abdul-qadir92/percy-demo.git"
 
     # 3. Install Dependencies
     npm install
 
-    # 4. Prepare Branch and Files (Inject the modified CSS)
+    # 4. Prepare Branch and Files
     git fetch origin main
     git checkout main
     git checkout -b update-button-base
@@ -65,8 +67,6 @@ steps:
 
     # 5. Execute PR script and capture logs
     mkdir -p logs
-    
-    # Run the bash script that creates the new branch and pushes the PR
     bash create-demo-pr.sh 2>&1 | tee logs/pr_output.log
     
     grep "Finalized build" logs/pr_output.log >> logs/log_$(Build.BuildId).txt
@@ -75,7 +75,6 @@ steps:
 
   displayName: 'Create Percy build, trigger PR, and upload snapshots'
   env:
-    # Use MY_ prefixes to avoid Azure DevOps variable shadowing
     MY_GITHUB_TOKEN: $(SECRET_GITHUB_TOKEN)
     MY_PERCY_TOKEN: $(SECRET_PERCY_TOKEN)
 
