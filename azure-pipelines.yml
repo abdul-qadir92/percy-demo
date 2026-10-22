@@ -39,7 +39,7 @@ steps:
     # 2. Setup Git Identity & Authentication
     git config --global user.email "$REQUESTED_EMAIL"
     git config --global user.name "$GITHUB_USER"
-    git remote set-url origin "https://x-access-token:${MY_GITHUB_TOKEN}@github.com/abdul-qadir92/percy-demo.git"
+    git remote set-url origin "https://${GITHUB_USER}:${MY_GITHUB_TOKEN}@github.com/abdul-qadir92/percy-demo.git"
 
     # 3. Install Dependencies
     npm install
