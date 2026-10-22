@@ -1,0 +1,31 @@
+name: BrowserStack Accessibility DevTools
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  # Allows triggering a manual re-run by commenting "@AccessibilityDevTools" on the PR
+  issue_comment:
+    types: [created]
+
+# These specific permissions are required by BrowserStack's zero-write credential model
+permissions:
+  contents: read          # Required to read the PR's changed files
+  pull-requests: read     # Required to resolve the PR details
+  id-token: write         # Required to securely prove the run came from your repository
+
+jobs:
+  accessibility-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run BrowserStack Accessibility DevTools
+        uses: browserstack/github-actions/accessibility-devtools@v0.0.1
+        with:
+          # Pulls credentials directly from GitHub Repository Secrets
+          username: ${{ secrets.BROWSERSTACK_USERNAME }}
+          access-key: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+          
+          # Optional: Uncomment to block PRs if severe accessibility issues are found
+          # fail-on-severity: error
